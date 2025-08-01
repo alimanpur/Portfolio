@@ -1,0 +1,168 @@
+:root {
+      --accent: #5A32A3;
+      --bg-white-glass: rgba(255, 255, 255, 0.6);
+      --text-dark: #222;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      background-image: url('assets/coolbackgrounds-topography-micron.svg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: -1;
+    }
+
+    header {
+      position: fixed;
+      width: 90%;
+      top: 0;
+      left: 0;
+      background: var(--bg-white-glass);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      z-index: 1000;
+    }
+
+
+    header nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    section {
+      padding: 6rem 5% 4rem;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(6px);
+    }
+
+    h2.section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    #hero{
+        display: flex;
+    }
+    .hero-text h1 {
+        margin-top: -10px;
+        margin-bottom: -8px;
+      font-size: 2.8rem;
+    }
+    .hero-text h4{
+        margin-top: 300px;
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+    }
+
+    .hero-img img {
+        margin-left: 550px;
+      max-width: 80%;
+      border-radius: 12px;
+    }
+
+    .services, .skills-grid, .project-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .services div, .project-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      width: 280px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .services div{
+    width: 550px;
+}
+
+    .skills-grid img {
+      display: block;
+      margin: auto;
+    }
+    .skills-grid div p{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #contact h2{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .contact form {
+      display: flex;
+      flex-direction: column;
+      max-width: 420px;
+      margin: auto;
+      gap: 1rem;
+    }
+
+    .contact input, .contact textarea {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #3e2380;
+    }
+
+    .socials {
+        display: flex;
+        justify-content: center;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .socials a {
+      margin: 0 10px;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+ .socials img{
+    width: 27px;
+ }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
