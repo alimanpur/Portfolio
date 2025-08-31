@@ -1,123 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio - Aliasger</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aliasger Manpurwala - Creative Developer</title>
 
-  <!-- Fonts and Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
-  <link rel="stylesheet" href="style.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Google Fonts: Space Grotesk & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        /* Custom Styles & Overrides */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Interactive Background Glow */
+        #gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(800px circle at var(--x) var(--y), rgba(163, 230, 53, 0.08), transparent 80%);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.2s linear; /* Smooth transition */
+        }
+
+        /* Floating Symbols Animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-25px) rotate(15deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+        }
+        .floating-symbol {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.05);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        /* Custom Cursor Styling */
+        .cursor-dot { width: 8px; height: 8px; background-color: #a3e635; }
+        .cursor-outline { width: 40px; height: 40px; border: 2px solid #a3e635; }
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            transition: transform 0.1s ease-out, width 0.2s ease-out, height 0.2s ease-out, opacity 0.2s;
+        }
+        body.cursor-hover .cursor-dot { transform: translate(-50%, -50%) scale(0.75); opacity: 0.8; }
+        body.cursor-hover .cursor-outline { width: 60px; height: 60px; border-width: 1px; transform: translate(-50%, -50%) rotate(45deg); }
+
+        /* Menu Overlay Styling */
+        #menu-overlay { transition: opacity 0.5s cubic-bezier(0.77, 0, 0.175, 1); }
+        #menu-overlay nav a { transform: translateY(20px); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; }
+        #menu-overlay.active nav a { transform: translateY(0); opacity: 1; }
+
+        /* Scroll-triggered Animations */
+        .reveal-element { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .reveal-element.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Underline animation for links */
+        .link-underline { position: relative; display: inline-block; }
+        .link-underline::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: #a3e635; transform-origin: bottom right; transition: transform 0.25s ease-out; }
+        .link-underline:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+
+        /* Project List Styles */
+        .project-list-item { border-top: 1px solid #373737; transition: background-color 0.4s ease; position: relative; overflow: hidden; }
+        .project-list-item:hover { background-color: #1a1a1a; }
+        .project-list-item .project-image-preview { transform: scale(0.95) rotate(-3deg); opacity: 0; transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease; }
+        .project-list-item:hover .project-image-preview { transform: scale(1) rotate(0); opacity: 1; }
+        /* Project list hover glow */
+        .project-list-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.08), transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+        .project-list-item:hover::before { opacity: 1; }
+        .project-list-item > div { position: relative; z-index: 1; } /* Ensure content is above glow */
+        .project-tag { border: 1px solid #4a4a4a; color: #9ca3af; font-family: 'Space Mono', monospace; }
+
+        /* About Me Panels */
+        .about-panel {
+            background-color: #111111;
+            border: 1px solid #2d2d2d;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        .about-panel-title {
+            font-family: 'Space Mono', monospace;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Skill Item Styles */
+        .skill-item {
+            background-color: #1a1a1a;
+            border: 1px solid #373737;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .skill-item:hover {
+            background-color: #a3e635;
+            color: #0A0A0A;
+            border-color: #a3e635;
+        }
+    </style>
 </head>
-<body>
-  <header>
-    <div class="logo"><img src="assets/AM.png" alt="Logo" width="60px"></div>
-    <nav>
-      <a href="#hero">Home</a>
-      <a href="#about">About</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<body class="antialiased">
 
-  <section id="hero">
-    <div class="hero-text" data-aos="fade-up">
-      <h4>Hi, I am</h4>
-      <h1>Aliasger ManpurWala</h1>
-      <p>Tech Learner | Future Software Developer | Code Explorer</p>
-      <a href="" class="btn" download>Download Resume</a>
+    <!-- Interactive Background -->
+    <div id="gradient-bg"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 p-6 md:p-8 flex justify-between items-center mix-blend-difference">
+        <a href="#" class="interactive-element text-xl font-bold text-white tracking-wider" style="font-family: 'Space Grotesk', sans-serif;">ALIASGER MANPURWALA</a>
+        <button id="menu-btn" class="interactive-element text-white font-semibold text-lg flex items-center gap-2">
+            MENU
+            <div class="space-y-1.5">
+                <span class="block w-6 h-0.5 bg-white"></span>
+                <span class="block w-6 h-0.5 bg-white"></span>
+            </div>
+        </button>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-[#0A0A0A] z-40 flex items-center justify-center opacity-0 pointer-events-none">
+        <nav class="text-center">
+            <ul class="text-4xl md:text-6xl font-bold text-gray-200 space-y-8">
+                <li><a href="#about" class="interactive-element menu-link link-underline">About</a></li>
+                <li><a href="#skills" class="interactive-element menu-link link-underline">Skills</a></li>
+                <li><a href="#work" class="interactive-element menu-link link-underline">Work</a></li>
+                <li><a href="#contact" class="interactive-element menu-link link-underline">Contact</a></li>
+            </ul>
+        </nav>
+        <button id="close-btn" class="absolute top-6 right-6 md:top-8 md:right-8 text-white interactive-element">
+            <i data-feather="x" class="w-10 h-10"></i>
+        </button>
     </div>
-    <div class="hero-img">
-      <img src="assets/Ali_image.png" alt="Aliasger" height="600px">
-    </div>
-  </section>
 
-  <section id="about">
-    <h2 class="section-title">About Me</h2>
-    <div class="services">
-      <div data-aos="fade-up">
-        <h3></h3>
-        <p>Hi, I'm <strong>Aliasger Manpur</strong>, a passionate and creative web developer with a strong interest in front-end technologies like HTML, CSS, and JavaScript. I enjoy building beautiful and responsive websites that create meaningful user experiences.</p>
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative h-screen min-h-[700px] flex flex-col justify-center items-center text-center p-6 overflow-hidden">
+             <!-- Floating Symbols -->
+            <span class="floating-symbol" style="top: 15%; left: 10%; animation-delay: 0s;">{</span>
+            <span class="floating-symbol" style="top: 20%; right: 15%; font-size: 10rem; animation-delay: -2s;">#</span>
+            <span class="floating-symbol" style="bottom: 10%; left: 25%; font-size: 6rem; animation-delay: -4s;">></span>
+            <span class="floating-symbol" style="bottom: 15%; right: 20%; animation-delay: -6s;">}</span>
 
-    <p>I’ve completed my 10th and 12th, and I am currently pursuing my B.Tech from <strong>IPS Academy (Off-Campus), Indore</strong>. I am in my 2nd year and consistently working on improving my development skills through hands-on projects and personal exploration.</p>
+            <div class="max-w-5xl mx-auto">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-100 leading-tight reveal-element">
+                    Hi, I'm Aliasger. A <span class="text-lime-400">Creative</span> Developer
+                </h1>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-400 reveal-element" style="transition-delay: 0.2s;">
+                    Tech Learner | Future Software Developer | Code Explorer
+                </p>
+            </div>
+        </section>
 
-    <p>Right now, I’m focused on mastering <strong>Java</strong> and <strong>DSA (Data Structures and Algorithms)</strong> to sharpen my problem-solving abilities and build a strong foundation for software development.</p>
+        <!-- About Section -->
+        <section id="about" class="py-20 md:py-32 px-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="about-panel reveal-element">
+                        <h2 class="about-panel-title">about-me</h2>
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            Hi, I'm Aliasger Manpurwala, a passionate and creative web developer with a strong interest in front-end technologies like HTML, CSS, and JavaScript. I enjoy building beautiful and responsive websites that create meaningful user experiences.
+                            <br><br>
+                            I'm currently a 2nd-year B.Tech student, focused on mastering Java and DSA to sharpen my problem-solving abilities and build a strong foundation for software development. "Code is like poetry – clean, meaningful, and full of logic."
+                        </p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="about-panel reveal-element" style="transition-delay: 0.2s;">
+                            <h2 class="about-panel-title">where-i-work</h2>
+                            <p class="text-lg text-gray-300">Currently based in Indore, India. Available for remote collaborations across the globe.</p>
+                        </div>
+                        <div class="about-panel reveal-element" style="transition-delay: 0.3s;">
+                            <h2 class="about-panel-title">current-focus</h2>
+                            <p class="text-lg text-gray-300">I'm actively seeking internship opportunities where I can apply my skills, contribute to real-world projects, and grow as a developer within a team environment.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="space-y-8">
+                     <div class="about-panel reveal-element" style="transition-delay: 0.4s;">
+                        <h2 class="about-panel-title">portrait</h2>
+                        <!-- 
+                            IMPORTANT: You need to replace the src link below.
+                            1. Upload your portrait to a service like Imgur or a public GitHub repository.
+                            2. Copy the direct link to the image (it should end in .jpg, .png, etc.).
+                            3. Paste your new link into the src="..." attribute below, replacing the placeholder.
+                        -->
+                        <img src="assets/Gemini_Generated_Image_ngcvrbngcvrbngcv.png" alt="Portrait of Aliasger Manpurwala" class="rounded-md w-full object-cover">
+                    </div>
+                     <div class="about-panel reveal-element" style="transition-delay: 0.5s;">
+                        <h2 class="about-panel-title">links</h2>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/alimanpur" target="_blank" class="interactive-element text-lg text-gray-300 hover:text-lime-400 transition-colors link-underline">GitHub</a></li>
+                            <li><a href="https://www.linkedin.com/in/aliasger-manpur-33188632b" target="_blank" class="interactive-element text-lg text-gray-300 hover:text-lime-400 transition-colors link-underline">LinkedIn</a></li>
+                            <li><a href="https://www.instagram.com/alimanpur71" target="_blank" class="interactive-element text-lg text-gray-300 hover:text-lime-400 transition-colors link-underline">Instagram</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 md:py-32 px-6 bg-[#111111]/30">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-left mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-100 mb-4 reveal-element">My Toolkit</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Using Now -->
+                    <div class="about-panel reveal-element border-lime-400/20">
+                        <h3 class="about-panel-title text-lime-400">USING NOW</h3>
+                        <div class="flex flex-wrap gap-4 mt-6">
+                            <span class="skill-item interactive-element">HTML5</span>
+                            <span class="skill-item interactive-element">CSS3</span>
+                            <span class="skill-item interactive-element">JavaScript</span>
+                            <span class="skill-item interactive-element">GitHub</span>
+                            <span class="skill-item interactive-element">Figma</span>
+                            <span class="skill-item interactive-element">C++</span>
+                            <span class="skill-item interactive-element">C</span>
+                        </div>
+                    </div>
+                    <!-- Learning -->
+                    <div class="about-panel reveal-element" style="transition-delay: 0.2s;">
+                        <h3 class="about-panel-title">LEARNING</h3>
+                        <div class="flex flex-wrap gap-4 mt-6">
+                           <span class="skill-item interactive-element">Java</span>
+                           <span class="skill-item interactive-element">Python</span>
+                           <span class="skill-item interactive-element">DSA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <p>I also have more exciting projects planned in my to-do list, and I look forward to bringing those ideas to life soon!</p>
+        <!-- Work Section -->
+        <section id="work" class="py-20 md:py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-left mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-100 mb-4 reveal-element">Project List</h2>
+                </div>
 
-    <p><em>"Code is like poetry – clean, meaningful, and full of logic."</em></p>
-      </div>
-      
-    </div>
-  </section>
+                <div class="border-b border-[#373737]">
+                    <!-- Project 1 -->
+                    <a href="#" class="project-list-item interactive-element block p-8 reveal-element">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                           <div class="w-full md:w-1/3">
+                                <h3 class="text-3xl md:text-4xl font-bold text-gray-100">Netflix Clone</h3>
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">HTML5</span>
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">CSS3</span>
+                                </div>
+                           </div>
+                           <div class="hidden md:block w-1/3 flex-shrink-0 text-center">
+                               <img src="https://placehold.co/400x300/1a1a1a/a3e635?text=Netflix+Clone" alt="Project preview" class="rounded-lg project-image-preview inline-block">
+                           </div>
+                           <div class="w-full md:w-1/3 text-left md:text-right">
+                                <p class="text-xl text-gray-400 font-mono">2024</p>
+                           </div>
+                        </div>
+                    </a>
+                     <!-- Project 2 -->
+                    <a href="#" class="project-list-item interactive-element block p-8 reveal-element">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                           <div class="w-full md:w-1/3">
+                                <h3 class="text-3xl md:text-4xl font-bold text-gray-100">Portfolio Website</h3>
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">HTML5</span>
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">TailwindCSS</span>
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">JavaScript</span>
+                                </div>
+                           </div>
+                           <div class="hidden md:block w-1/3 flex-shrink-0 text-center">
+                                <img src="https://placehold.co/400x300/1a1a1a/a3e635?text=Portfolio" alt="Project preview" class="rounded-lg project-image-preview inline-block">
+                           </div>
+                           <div class="w-full md:w-1/3 text-left md:text-right">
+                                <p class="text-xl text-gray-400 font-mono">2024</p>
+                           </div>
+                        </div>
+                    </a>
+                     <!-- Project 3 -->
+                    <a href="#" class="project-list-item interactive-element block p-8 reveal-element">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                           <div class="w-full md:w-1/3">
+                                <h3 class="text-3xl md:text-4xl font-bold text-gray-100">Upcoming Project</h3>
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">Java</span>
+                                    <span class="project-tag text-sm py-1 px-3 rounded-full">DSA</span>
+                                </div>
+                           </div>
+                           <div class="hidden md:block w-1/3 flex-shrink-0 text-center">
+                                <img src="https://placehold.co/400x300/1a1a1a/a3e635?text=Coming+Soon" alt="Project preview" class="rounded-lg project-image-preview inline-block">
+                           </div>
+                           <div class="w-full md:w-1/3 text-left md:text-right">
+                                <p class="text-xl text-gray-400 font-mono">2025</p>
+                           </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-  <section id="skills">
-    <h2 class="section-title">Skills</h2>
-    <h3 style="text-align:center">Using Now:</h3>
-    <div class="skills-grid">
-      <div><img src="assets/html_image.png" alt="HTML5" height="50"><p>HTML5</p></div>
-      <div><img src="assets/css_image.png" alt="CSS3" height="50"><p>CSS3</p></div>
-      <div><img src="assets/javascript_image.png" alt="JavaScript" height="50"><p>JavaScript</p></div>
-      <div><img src="assets/github_image.png" alt="Github" height="50"><p>GitHub</p></div>
-      <div><img src="assets/figma_image.webp" alt="Figma" height="50"><p>Figma</p></div>
-      <div><img src="assets/c++_image.png" alt="Figma" height="50"><p>C++</p></div>
-      <div><img src="assets/c_image.webp" alt="C" height="50"><p>C</p></div>
-    </div>
-    <h3 style="text-align:center; margin-top: 2rem;">Learning:</h3>
-    <div class="skills-grid">
-      <div><img src="assets/java_image.webp" alt="Java" height="50"><p>Java</p></div>
-      <div><img src="assets/python_image.webp" alt="Python" height="50"><p>Python</p></div>
-      <div><img src="assets/DSA_image.png" alt="DSA" height="50"><p>DSA</p></div>
-    </div>
-  </section>
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 md:py-40 px-6 text-center">
+            <div class="max-w-4xl mx-auto">
+                 <h2 class="text-4xl md:text-6xl font-bold text-gray-100 mb-10 reveal-element">Let's work together.</h2>
+                 <a href="mailto:aliasgerm71@gmail.com" class="interactive-element text-3xl md:text-5xl font-bold text-lime-400 link-underline reveal-element" style="transition-delay: 0.2s;">aliasgerm71@gmail.com</a>
+            </div>
+        </section>
+    </main>
 
-  <section id="projects">
-    <h2 class="section-title">Projects</h2>
-    <div class="project-grid">
-      <div class="project-card" data-aos="zoom-in">
-        <img src="assets/favicon.ico" alt="Project 1" width="50px">
-        <h3>Netflix Clone</h3>
-        <p>Responsive netflix web using Html & Css</p>
-        <a href="https://github.com/alimanpur/Netflix-clone.git" class="btn">View Project</a>
-      </div>
-      <div class="project-card" data-aos="zoom-in" data-aos-delay="100">
-        <img src="assets/AM.png" alt="Project 2" width="60px">
-        <h3>Portfolio </h3>
-        <p>Modern responsive personal portfolio.</p>
-        <a href="https://github.com/alimanpur/Portfolio.git" class="btn">View Project</a>
-      </div>
-    </div>
-  </section>
+    <!-- Footer -->
+    <footer class="py-12 px-6 font-mono text-sm text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="reveal-element">
+                <span>&copy; <span id="current-year"></span> Aliasger Manpurwala</span>
+            </div>
+            <div class="reveal-element" style="transition-delay: 0.2s;">
+                <span>Based in Indore &bull; Local time <span id="local-time"></span></span>
+            </div>
+            <div class="flex gap-6 reveal-element" style="transition-delay: 0.4s;">
+                <a href="https://github.com/alimanpur" target="_blank" class="interactive-element hover:text-lime-400 transition-colors">GitHub</a>
+                <a href="https://www.linkedin.com/in/aliasger-manpur-33188632b" target="_blank" class="interactive-element hover:text-lime-400 transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
 
-  <section id="contact" class="contact">
-    <h2 class="section-title">Contact Me</h2>
-    <form  action="https://formsubmit.co/aliasgerm71@gmail.com" method="POST">
-  <input type="hidden" name="_subject" value="New Portfolio Message!">
-  <input type="hidden" name="_captcha" value="false">
-  <input type="hidden" name="_template" value="box">
-      <input type="text" placeholder="Your name" required>
-      <input type="email" placeholder="Your email" required>
-      <textarea placeholder="Your message" required></textarea>
-      <button class="btn" type="submit">Send Message</button>
-    </form>
-    <div class="socials">
-      <a href="mailto:aliasgerm71@gmail.com" target="_blank" title="Email">
-       <img src="https://img.icons8.com/ios-filled/30/7d3cff/gmail.png" alt="Gmail Icon" /></a>
-      <a href="https://www.linkedin.com/in/aliasger-manpur-33188632b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/alimanpur"><i class="fab fa-github"></i></a>
-      <a href="https://www.instagram.com/alimanpur71?igsh=MW9rYWpsbDQzbXlwdA=="><i class="fab fa-instagram"></i></a>
-    </div>
-  </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-  <footer>
-    <p>&copy; 2025 Aliasger ManpurWala. All Rights Reserved.</p>
-  </footer>
+            // --- Feather Icons Initialization ---
+            feather.replace();
 
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>AOS.init();</script>
+            // --- Set Current Year & Time in Footer ---
+            const yearSpan = document.getElementById('current-year');
+            const timeSpan = document.getElementById('local-time');
+            yearSpan.textContent = new Date().getFullYear();
+            
+            const updateTime = () => {
+                const now = new Date();
+                timeSpan.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            };
+            updateTime();
+            setInterval(updateTime, 60000); // Update every minute
+
+            // --- Interactive Background Logic ---
+            const gradientBg = document.getElementById('gradient-bg');
+            window.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                gradientBg.style.setProperty('--x', `${clientX}px`);
+                gradientBg.style.setProperty('--y', `${clientY}px`);
+            });
+
+            // --- Custom Cursor Logic ---
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
+                cursorOutline.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%) ${document.body.classList.contains('cursor-hover') ? 'rotate(45deg)' : ''}`;
+            });
+            
+            const interactiveElements = document.querySelectorAll('.interactive-element');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+
+            // --- Menu Toggle Logic ---
+            const menuBtn = document.getElementById('menu-btn');
+            const closeBtn = document.getElementById('close-btn');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            const toggleMenu = () => {
+                const isActive = menuOverlay.classList.toggle('active');
+                menuOverlay.style.opacity = isActive ? '1' : '0';
+                menuOverlay.style.pointerEvents = isActive ? 'auto' : 'none';
+                document.body.style.overflow = isActive ? 'hidden' : '';
+                if (isActive) {
+                    menuLinks.forEach((link, index) => {
+                        link.style.transitionDelay = `${index * 0.1}s`;
+                    });
+                }
+            };
+
+            [menuBtn, closeBtn, ...menuLinks].forEach(el => el.addEventListener('click', toggleMenu));
+
+            // --- Scroll-triggered Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-element').forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
